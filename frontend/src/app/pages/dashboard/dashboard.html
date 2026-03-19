@@ -1,0 +1,497 @@
+<div class="min-h-screen bg-background">
+
+  <!-- ─── Header ──────────────────────────────────────────────────────────── -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="text-primary-foreground">
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+            <path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" />
+          </svg>
+        </div>
+        <span class="text-lg font-bold text-foreground">DocPay</span>
+      </div>
+
+      <!-- Logout -->
+      <button
+        (click)="logout()"
+        type="button"
+        class="px-4 py-2 rounded-full border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" x2="9" y1="12" y2="12" />
+        </svg>
+        Sair
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ─── Conteúdo principal ────────────────────────────────────────────── -->
+  <main class="pt-24 pb-16 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-foreground">Analisar documento</h1>
+        <p class="text-muted-foreground mt-1">Envie um arquivo financeiro para extrair os dados automaticamente.</p>
+      </div>
+
+      <!-- ─── Zona de upload ──────────────────────────────────────────────── -->
+      <div
+        class="upload-zone p-10 text-center cursor-pointer"
+        [class.dragging]="isDragging()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave()"
+        (drop)="onDrop($event)"
+        (click)="fileInput.click()">
+
+        <div class="flex flex-col items-center gap-3 pointer-events-none">
+          <div class="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="text-primary">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" x2="12" y1="3" y2="15" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-foreground font-semibold">Arraste o arquivo aqui</p>
+            <p class="text-muted-foreground text-sm mt-1">ou clique para selecionar • PDF, PNG, JPG</p>
+          </div>
+        </div>
+
+      </div>
+
+      <input
+        #fileInput
+        type="file"
+        accept=".pdf,.png,.jpg,.jpeg"
+        multiple
+        class="hidden"
+        (change)="onFileInputChange($event)"
+      />
+
+      <!-- ─── Lista de arquivos selecionados ────────────────────────────── -->
+      @if (selectedFiles().length > 0) {
+        <div class="mt-4 space-y-2">
+
+          @for (file of selectedFiles(); track file.name; let i = $index) {
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-card border border-border">
+
+              <div class="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                <span class="text-[10px] font-bold text-primary">{{ getFileExtension(file.name) }}</span>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-foreground truncate">{{ file.name }}</p>
+                <p class="text-xs text-muted-foreground">{{ formatFileSize(file.size) }}</p>
+              </div>
+
+              <button
+                type="button"
+                (click)="removeFile(i)"
+                class="p-1.5 rounded-lg hover:bg-muted transition-colors shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" class="text-muted-foreground">
+                  <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                </svg>
+              </button>
+
+            </div>
+          }
+
+          <!-- Botão de análise -->
+          <button
+            type="button"
+            (click)="analyzeFiles()"
+            [disabled]="isAnalyzing()"
+            class="w-full py-3.5 mt-2 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2">
+
+            @if (isAnalyzing()) {
+              <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+              </svg>
+              Analisando...
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
+              Analisar {{ selectedFiles().length }} {{ selectedFiles().length === 1 ? 'arquivo' : 'arquivos' }}
+            }
+
+          </button>
+
+        </div>
+      }
+
+      <!-- ─── Erro ──────────────────────────────────────────────────────────── -->
+      @if (errorMessage()) {
+        <div class="mt-4 p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-sm text-destructive">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- ─── Resultados da análise ──────────────────────────────────────── -->
+      @if (results()) {
+        <div class="mt-8 space-y-10">
+
+          @for (item of results()!; track item.fileName) {
+
+            <!-- Nome do arquivo analisado -->
+            <div>
+              <div class="flex items-center gap-2 mb-5">
+                <div class="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" class="text-primary">
+                    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                  </svg>
+                </div>
+                <span class="font-semibold text-foreground text-sm">{{ item.fileName }}</span>
+              </div>
+
+              <div class="grid grid-cols-1 gap-4">
+
+                <!-- ── Card 1: Entradas & Receitas ───────────────────────── -->
+                @if (item.analysis.entries) {
+                  <div class="bg-card rounded-2xl border border-border p-5 shadow-sm">
+
+                    <div class="flex items-start justify-between gap-3 mb-4">
+                      <div class="flex items-center gap-2">
+                        <!-- Ícone de seta para cima (entradas) -->
+                        <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            class="text-green-600">
+                            <path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>
+                          </svg>
+                        </div>
+                        <span class="font-semibold text-foreground text-sm">Entradas & Receitas</span>
+                      </div>
+                      @if (item.analysis.entries.total) {
+                        <span class="text-green-600 font-bold text-base shrink-0">{{ item.analysis.entries.total }}</span>
+                      }
+                    </div>
+
+                    @if (item.analysis.entries.classNote) {
+                      <p class="text-xs text-muted-foreground bg-muted rounded-lg px-3 py-2 mb-3">
+                        {{ item.analysis.entries.classNote }}
+                      </p>
+                    }
+
+                    <div class="space-y-2">
+                      @for (entry of item.analysis.entries.items; track entry.description) {
+                        <div class="flex items-start justify-between gap-3 py-2 border-t border-border first:border-t-0">
+                          <div class="min-w-0">
+                            <p class="text-sm text-foreground">{{ entry.description }}</p>
+                            @if (entry.note) {
+                              <p class="text-xs text-muted-foreground mt-0.5">{{ entry.note }}</p>
+                            }
+                          </div>
+                          <span class="text-sm font-medium text-green-600 shrink-0">{{ entry.value }}</span>
+                        </div>
+                      }
+                    </div>
+
+                  </div>
+                }
+
+                <!-- ── Card 2: Saídas & Gastos ────────────────────────────── -->
+                @if (item.analysis.expenses) {
+                  <div class="bg-card rounded-2xl border border-border p-5 shadow-sm">
+
+                    <div class="flex items-start justify-between gap-3 mb-4">
+                      <div class="flex items-center gap-2">
+                        <!-- Ícone de seta para baixo (saídas) -->
+                        <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            class="text-red-500">
+                            <path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>
+                          </svg>
+                        </div>
+                        <span class="font-semibold text-foreground text-sm">Saídas & Gastos</span>
+                      </div>
+                      @if (item.analysis.expenses.total) {
+                        <span class="text-red-500 font-bold text-base shrink-0">{{ item.analysis.expenses.total }}</span>
+                      }
+                    </div>
+
+                    <div class="space-y-2">
+                      @for (expense of item.analysis.expenses.items; track expense.category) {
+                        <div class="flex items-start justify-between gap-3 py-2 border-t border-border first:border-t-0">
+                          <div class="min-w-0">
+                            <p class="text-sm font-medium text-foreground">{{ expense.category }}</p>
+                            <p class="text-xs text-muted-foreground mt-0.5">{{ expense.description }}</p>
+                          </div>
+                          <span class="text-sm font-medium text-red-500 shrink-0">{{ expense.value }}</span>
+                        </div>
+                      }
+                    </div>
+
+                  </div>
+                }
+
+                <!-- ── Card 3: Destaques e Insights ───────────────────────── -->
+                @if (item.analysis.insights?.length) {
+                  <div class="bg-card rounded-2xl border border-border p-5 shadow-sm">
+
+                    <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                          class="text-blue-500">
+                          <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                          <path d="M9 18h6"/><path d="M10 22h4"/>
+                        </svg>
+                      </div>
+                      <span class="font-semibold text-foreground text-sm">Destaques e Insights</span>
+                    </div>
+
+                    <ul class="space-y-2">
+                      @for (insight of item.analysis.insights; track insight) {
+                        <li class="flex items-start gap-2 text-sm text-foreground">
+                          <span class="text-blue-500 mt-0.5 shrink-0">•</span>
+                          {{ insight }}
+                        </li>
+                      }
+                    </ul>
+
+                  </div>
+                }
+
+                <!-- ── Card 4: Conselho do Analista ───────────────────────── -->
+                @if (item.analysis.advice?.length) {
+                  <div class="bg-card rounded-2xl border border-border p-5 shadow-sm">
+
+                    <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                          class="text-amber-500">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                          <circle cx="9" cy="7" r="4"/>
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                      </div>
+                      <span class="font-semibold text-foreground text-sm">Conselho do Analista</span>
+                    </div>
+
+                    <ul class="space-y-2">
+                      @for (tip of item.analysis.advice; track tip) {
+                        <li class="flex items-start gap-2 text-sm text-foreground">
+                          <span class="text-amber-500 mt-0.5 shrink-0">•</span>
+                          {{ tip }}
+                        </li>
+                      }
+                    </ul>
+
+                  </div>
+                }
+
+              </div>
+            </div>
+
+          }
+        </div>
+      }
+
+      <!-- ─── Histórico de análises ───────────────────────────────────────── -->
+      <div class="mt-16">
+
+        <div class="flex items-center gap-2 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="text-muted-foreground">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <h2 class="text-lg font-semibold text-foreground">Histórico de análises</h2>
+        </div>
+
+        @if (isLoadingHistory()) {
+          <div class="flex items-center gap-2 text-sm text-muted-foreground">
+            <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+            </svg>
+            Carregando histórico...
+          </div>
+        } @else if (history().length === 0) {
+          <p class="text-sm text-muted-foreground">Nenhuma análise salva ainda.</p>
+        } @else {
+          <div class="space-y-3">
+
+            @for (item of history(); track item.id) {
+
+              <div class="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+
+                <!-- Cabeçalho clicável -->
+                <div
+                  class="flex items-center gap-3 p-4 cursor-pointer hover:bg-muted/40 transition-colors"
+                  (click)="toggleExpand(item.id)">
+
+                  <!-- Seta indicadora de expansão -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-muted-foreground shrink-0 transition-transform"
+                    [class.rotate-90]="expandedId() === item.id">
+                    <path d="m9 18 6-6-6-6"/>
+                  </svg>
+
+                  <!-- Data -->
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" class="text-muted-foreground shrink-0">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span class="text-xs text-muted-foreground truncate">{{ formatDate(item.createdAt) }}</span>
+                  </div>
+
+                  <!-- Totais -->
+                  <div class="flex items-center gap-2 ml-auto shrink-0">
+                    @if (item.analysis.entries?.total) {
+                      <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+                        ↑ {{ item.analysis.entries!.total }}
+                      </span>
+                    }
+                    @if (item.analysis.expenses?.total) {
+                      <span class="text-xs font-semibold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">
+                        ↓ {{ item.analysis.expenses!.total }}
+                      </span>
+                    }
+                  </div>
+
+                  <!-- Botão remover -->
+                  <button
+                    type="button"
+                    (click)="$event.stopPropagation(); deleteHistoryItem(item.id)"
+                    class="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors shrink-0"
+                    title="Remover análise">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" class="text-muted-foreground hover:text-destructive">
+                      <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                      <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+
+                </div>
+
+                <!-- Painel de detalhe (expandido) -->
+                @if (expandedId() === item.id) {
+                  <div class="px-4 pb-4 border-t border-border space-y-3 pt-4">
+
+                    <!-- Entradas -->
+                    @if (item.analysis.entries) {
+                      <div class="bg-muted/40 rounded-xl border border-border p-4">
+                        <div class="flex items-center justify-between mb-3">
+                          <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-md bg-green-50 flex items-center justify-center shrink-0">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" class="text-green-600">
+                                <path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>
+                              </svg>
+                            </div>
+                            <span class="text-xs font-semibold text-foreground">Entradas</span>
+                          </div>
+                          @if (item.analysis.entries.total) {
+                            <span class="text-sm font-bold text-green-600">{{ item.analysis.entries.total }}</span>
+                          }
+                        </div>
+                        <div class="space-y-1.5">
+                          @for (entry of item.analysis.entries.items; track entry.description) {
+                            <div class="flex items-center justify-between gap-2 text-xs">
+                              <span class="text-muted-foreground truncate">{{ entry.description }}</span>
+                              <span class="font-medium text-green-600 shrink-0">{{ entry.value }}</span>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+
+                    <!-- Saídas -->
+                    @if (item.analysis.expenses) {
+                      <div class="bg-muted/40 rounded-xl border border-border p-4">
+                        <div class="flex items-center justify-between mb-3">
+                          <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-md bg-red-50 flex items-center justify-center shrink-0">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" class="text-red-500">
+                                <path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>
+                              </svg>
+                            </div>
+                            <span class="text-xs font-semibold text-foreground">Saídas</span>
+                          </div>
+                          @if (item.analysis.expenses.total) {
+                            <span class="text-sm font-bold text-red-500">{{ item.analysis.expenses.total }}</span>
+                          }
+                        </div>
+                        <div class="space-y-1.5">
+                          @for (expense of item.analysis.expenses.items; track expense.description) {
+                            <div class="flex items-start justify-between gap-2 text-xs">
+                              <div class="min-w-0">
+                                <p class="text-foreground truncate">{{ expense.description }}</p>
+                                <p class="text-muted-foreground/70">{{ expense.category }}</p>
+                              </div>
+                              <span class="font-medium text-red-500 shrink-0">{{ expense.value }}</span>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+
+                    <!-- Insights -->
+                    @if (item.analysis.insights?.length) {
+                      <div class="bg-muted/40 rounded-xl border border-border p-4">
+                        <p class="text-xs font-semibold text-foreground mb-2">Insights</p>
+                        <ul class="space-y-1.5">
+                          @for (insight of item.analysis.insights; track insight) {
+                            <li class="flex items-start gap-1.5 text-xs text-foreground">
+                              <span class="text-blue-500 shrink-0 mt-0.5">•</span>{{ insight }}
+                            </li>
+                          }
+                        </ul>
+                      </div>
+                    }
+
+                    <!-- Conselhos -->
+                    @if (item.analysis.advice?.length) {
+                      <div class="bg-muted/40 rounded-xl border border-border p-4">
+                        <p class="text-xs font-semibold text-foreground mb-2">Conselhos</p>
+                        <ul class="space-y-1.5">
+                          @for (tip of item.analysis.advice; track tip) {
+                            <li class="flex items-start gap-1.5 text-xs text-foreground">
+                              <span class="text-amber-500 shrink-0 mt-0.5">•</span>{{ tip }}
+                            </li>
+                          }
+                        </ul>
+                      </div>
+                    }
+
+                  </div>
+                }
+
+              </div>
+
+            }
+          </div>
+        }
+
+      </div>
+
+    </div>
+  </main>
+
+</div>

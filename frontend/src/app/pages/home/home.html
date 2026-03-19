@@ -1,0 +1,29 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <section class="pt-32 pb-20 px-6 relative overflow-hidden">
+    <div class="absolute inset-0" style="background: var(--gradient-glow)"></div>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <div>
+        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary text-secondary-foreground text-sm font-medium mb-6">Análise inteligente de documentos</span>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-foreground leading-tight mb-6">Analise pagamentos. <span class="text-gradient">Simples assim.</span></h1>
+        <p class="text-lg text-muted-foreground max-w-xl mx-auto mb-12">Envie sua fatura de cartão ou extrato bancário em PDF e nossa IA classifica entradas, saídas e ainda gera conselhos financeiros personalizados.</p>
+      </div>
+      <app-file-upload-zone></app-file-upload-zone>
+    </div>
+  </section>
+
+  <app-features></app-features>
+  <app-results-preview></app-results-preview>
+
+  <footer class="py-12 px-6 border-t border-border">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-muted-foreground">© 2026 DocPay. Todos os direitos reservados.</p>
+      <div class="flex gap-6 text-sm text-muted-foreground">
+        <a href="#">Privacidade</a>
+        <a href="#">Termos</a>
+        <a href="#">Contato</a>
+      </div>
+    </div>
+  </footer>
+</div>

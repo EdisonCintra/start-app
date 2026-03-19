@@ -1,0 +1,43 @@
+<div class="w-full max-w-2xl mx-auto">
+  <div class="upload-zone p-12 text-center cursor-pointer" routerLink="/login">
+    <div class="flex flex-col items-center gap-4">
+      <div class="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" x2="12" y1="3" y2="15"/>
+        </svg>
+      </div>
+      <div >
+        <p class="text-foreground font-semibold text-lg" >Arraste seus arquivos aqui</p>
+        <p class="text-muted-foreground text-sm mt-1">ou clique para selecionar • PDF, PNG, JPG</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exemplo visual de arquivos (apenas layout) -->
+  <div class="mt-4 space-y-2" routerLink="/login">
+    <div class="flex items-center gap-3 p-3 rounded-xl bg-card border border-border">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-red-500 shrink-0">
+        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+        <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      </svg>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-foreground truncate">fatura_exemplo.pdf</p>
+        <p class="text-xs text-muted-foreground">1.2 MB</p>
+      </div>
+      <button type="button" class="p-1 rounded-lg hover:bg-muted transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted-foreground">
+          <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+        </svg>
+      </button>
+    </div>
+    <button type="button" class="w-full py-3.5 mt-4 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+        <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      </svg>
+      Analisar 1 arquivo
+    </button>
+  </div>
+</div>

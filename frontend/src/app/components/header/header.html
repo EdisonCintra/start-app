@@ -1,0 +1,29 @@
+<header class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-foreground">
+          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+          <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+          <path d="M10 9H8"/>
+          <path d="M16 13H8"/>
+          <path d="M16 17H8"/>
+          <path d="M10 5H8"/>
+        </svg>
+      </div>
+      <span class="text-lg font-bold text-foreground">DocPay</span>
+    </div>
+    <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+      <a href="#recursos" class="hover:text-foreground transition-colors">Recursos</a>
+      <a href="#exemplo" class="hover:text-foreground transition-colors">Exemplo</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <button routerLink="/login" type="button" class="px-5 py-2 rounded-full border border-border text-foreground text-sm font-semibold hover:bg-accent transition-colors">
+        Login
+      </button>
+      <button routerLink="/register" type="button" class="px-5 py-2 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity">
+        Começar
+      </button>
+    </div>
+  </div>
+</header>

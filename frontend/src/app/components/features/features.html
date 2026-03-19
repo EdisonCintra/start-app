@@ -1,0 +1,38 @@
+<section id="recursos" class="py-24 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16">
+      <p class="text-sm font-semibold text-primary mb-2">Recursos</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-foreground">
+        Tudo que você precisa para analisar pagamentos
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      @for (f of features; track f.title) {
+      <div class="p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 transition-shadow">
+        <div class="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-4">
+          @switch (f.icon) {
+          @case ('zap') {
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          }
+          @case ('shield') {
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+          </svg>
+          }
+          @case ('bar') {
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary">
+            <line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/>
+            <line x1="6" x2="6" y1="20" y2="16"/>
+          </svg>
+          }
+          }
+        </div>
+        <h3 class="font-semibold text-foreground mb-2">{{ f.title }}</h3>
+        <p class="text-sm text-muted-foreground leading-relaxed">{{ f.desc }}</p>
+      </div>
+      }
+    </div>
+  </div>
+</section>

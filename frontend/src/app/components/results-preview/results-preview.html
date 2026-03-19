@@ -1,0 +1,88 @@
+<section id="exemplo" class="py-24 px-6 bg-muted/50">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <p class="text-sm font-semibold text-primary mb-2">Exemplo de resultado</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-foreground">
+        O que a IA extrai da sua fatura
+      </h2>
+    </div>
+
+    <div class="max-w-2xl mx-auto bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+
+      <!-- Cabeçalho do card -->
+      <div class="flex items-center gap-3 px-6 py-4 border-b border-border">
+        <div class="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div>
+          <p class="font-semibold text-foreground text-sm">fatura_marco_2026.pdf</p>
+          <p class="text-xs text-muted-foreground">Análise concluída em 2.3s</p>
+        </div>
+      </div>
+
+      <div class="p-6 space-y-6">
+
+        <!-- Entradas e Saídas lado a lado -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <!-- Entradas -->
+          <div class="rounded-xl border border-border bg-muted/40 p-4">
+            <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Entradas</p>
+            @for (item of entries; track item.description) {
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs text-muted-foreground truncate">{{ item.description }}</span>
+                <span class="text-sm font-bold text-primary shrink-0">{{ item.value }}</span>
+              </div>
+            }
+          </div>
+
+          <!-- Saídas -->
+          <div class="rounded-xl border border-border bg-muted/40 p-4">
+            <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Saídas</p>
+            <div class="space-y-2">
+              @for (item of expenses; track item.description) {
+                <div class="flex items-center justify-between gap-2">
+                  <div class="min-w-0">
+                    <p class="text-xs text-muted-foreground truncate">{{ item.description }}</p>
+                    <p class="text-[10px] text-muted-foreground/60">{{ item.category }}</p>
+                  </div>
+                  <span class="text-sm font-semibold text-foreground shrink-0">{{ item.value }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="rounded-xl border border-border bg-muted/40 p-4">
+          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Insights</p>
+          @for (insight of insights; track insight) {
+            <div class="flex items-start gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary mt-0.5 shrink-0">
+                <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+              </svg>
+              <p class="text-sm text-foreground">{{ insight }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Conselhos -->
+        <div class="rounded-xl border border-border bg-muted/40 p-4">
+          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Conselhos</p>
+          @for (tip of advice; track tip) {
+            <div class="flex items-start gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary mt-0.5 shrink-0">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              <p class="text-sm text-foreground">{{ tip }}</p>
+            </div>
+          }
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
