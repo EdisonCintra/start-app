@@ -1,11 +1,8 @@
-# 💰 FinanceAI — Análise Financeira com OCR e Inteligência Artificial
+# 💰 DocPay — Análise Financeira com OCR e Inteligência Artificial
 
 Aplicação full-stack que extrai, processa e analisa documentos financeiros brasileiros (faturas de cartão, contas de energia, água, telefone e gás) usando **OCR**, **mascaramento de dados pessoais (PII)** e **IA generativa**.
 
 **Status:** ✅ Produção | **Versão:** 1.0.0 | **Última Atualização:** Março 2026
-
-🌐 **Frontend:** https://sublime-light-production-3490.up.railway.app
-🔗 **API:** https://start-app-production-29a4.up.railway.app
 
 ---
 
@@ -33,7 +30,7 @@ Aplicação full-stack que extrai, processa e analisa documentos financeiros bra
 
 ## 👁️ Visão Geral
 
-O FinanceAI permite que usuários façam upload de faturas e contas em formato de imagem ou PDF e recebam automaticamente:
+O DocPay permite que usuários façam upload de faturas e contas em formato de imagem ou PDF e recebam automaticamente:
 
 ✅ **Extração de texto** via OCR (Tesseract) ou parsing direto de PDF
 ✅ **Mascaramento automático** de dados sensíveis (CPF, CNPJ, cartão, e-mail, telefone)
@@ -150,16 +147,16 @@ Os dados do idioma português (`por.traineddata`) devem estar na pasta `tessdata
 
 Configure no `application.properties` (local) ou nas variáveis do Railway (produção):
 
-| Variável | Descrição | Exemplo |
-|----------|-----------|---------|
-| `SPRING_DATASOURCE_URL` | URL JDBC do banco | `jdbc:mysql://localhost:3306/financeai` |
-| `SPRING_DATASOURCE_USERNAME` | Usuário do banco | `root` |
-| `SPRING_DATASOURCE_PASSWORD` | Senha do banco | `senha123` |
-| `JWT_SECRET` | Segredo para assinar tokens JWT | string longa e aleatória |
-| `GROQ_API_KEY` | Chave da API Groq | `gsk_...` |
+| Variável | Descrição | Exemplo                                  |
+|----------|-----------|------------------------------------------|
+| `SPRING_DATASOURCE_URL` | URL JDBC do banco | `jdbc:mysql://localhost:3306/docpay`     |
+| `SPRING_DATASOURCE_USERNAME` | Usuário do banco | `root`                                   |
+| `SPRING_DATASOURCE_PASSWORD` | Senha do banco | `senha123`                               |
+| `JWT_SECRET` | Segredo para assinar tokens JWT | string longa e aleatória                 |
+| `GROQ_API_KEY` | Chave da API Groq | `gsk_...`                                |
 | `TESSERACT_PATH` | Caminho para a pasta `tessdata` | `/usr/share/tesseract-ocr/4.00/tessdata` |
-| `TESSERACT_LANG` | Idioma do Tesseract | `por` |
-| `PORT` | Porta do servidor (opcional) | `8080` |
+| `TESSERACT_LANG` | Idioma do Tesseract | `por`                                    |
+| `PORT` | Porta do servidor (opcional) | `8080`                                   |
 
 > ⚠️ **Nunca commite credenciais reais.** Use variáveis de ambiente ou um `.env` ignorado pelo `.gitignore`.
 
@@ -222,7 +219,7 @@ Rota exclusiva para **ADMIN**:
 
 ## 📡 Endpoints da API
 
-> Substitua `{HOST}` por `http://localhost:8080` (local) ou `https://start-app-production-29a4.up.railway.app` (produção).
+> Substitua `{HOST}` por `http://localhost:8080` (local).
 
 ---
 
