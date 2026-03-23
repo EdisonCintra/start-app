@@ -2,6 +2,7 @@ package com.start.start_app.service;
 
 import com.start.start_app.exception.business.InvalidDocumentException;
 import com.start.start_app.exception.business.OcrException;
+import com.start.start_app.infrastructure.configuration.TesseractConfig;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.pdfbox.Loader;
@@ -20,17 +21,16 @@ import java.util.List;
 @Service
 public class OcrService {
 
-    @Value("${tesseract.datapath}")
-    private String datapath;
-
     @Value("${tesseract.language:eng}")
     private String language;
 
     // Injeção via construtor: permite que o Spring injete sem precisar de @Autowired no campo
     private final PiiMaskingService piiMaskingService;
+    private final TesseractConfig tesseractConfig;
 
-    public OcrService(PiiMaskingService piiMaskingService) {
+    public OcrService(PiiMaskingService piiMaskingService, TesseractConfig tesseractConfig) {
         this.piiMaskingService = piiMaskingService;
+        this.tesseractConfig = tesseractConfig;
     }
 
     private static final List<String> ALLOWED_EXTENSIONS = List.of("png", "jpg", "jpeg", "pdf");
@@ -111,11 +111,16 @@ public class OcrService {
     private String runTesseract(BufferedImage image) {
         try {
             Tesseract tesseract = new Tesseract();
-            tesseract.setDatapath(datapath);
+            // TesseractConfig resolve o caminho correto: local (Windows) ou tessdata embutido (deploy)
+            tesseract.setDatapath(tesseractConfig.getTessDataPath());
             tesseract.setLanguage(language);
             return tesseract.doOCR(image);
         } catch (TesseractException e) {
             throw new OcrException("Falha no motor OCR: " + e.getMessage());
+        } catch (Throwable e) {
+            // Captura Error (UnsatisfiedLinkError, ExceptionInInitializerError, etc.)
+            // que ocorrem quando as DLLs nativas do Tesseract não são carregadas corretamente
+            throw new OcrException("Tesseract não inicializado: " + e.getMessage());
         }
     }
 
