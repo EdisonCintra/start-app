@@ -1,5 +1,5 @@
 // src/environments/environment.prod.ts
 export const environment = {
   production: true,
-  apiUrl: 'https://start-app-production-29a4.up.railway.app'
+  apiUrl: 'https://start-app-production-6ab2.up.railway.app'
 };
